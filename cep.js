@@ -3,23 +3,14 @@ console.log("=== CEP ===");
 // Actions
 
 function onlyNumbers() {
-    // console.log(this value, this.value.match(/\d+/));
-    // console.log(this.value, /\d+/.test(this.value));
     this.value = this.value.replace(/\D+/g, "");
 }
 
 function validateEntry() {
-    this.value.length;
     if (this.value.length === 8) {
-        // this.style.borderColor = "";
-        // this.style.borderWidth = "";
-        // this.style.backgroundColor = "";
         this.classList.remove("error");
         getAddress(this.value);
     } else {
-        // this.style.borderColor = "red";
-        // this.style.borderWidth = "2px";
-        // this.style.backgroundColor = "yellow";
         this.classList.add("error");
         this.focus();
     }
