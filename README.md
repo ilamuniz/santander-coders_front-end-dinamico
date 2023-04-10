@@ -1,12 +1,14 @@
-# Front End Dinâmico
+# Front End Dinâmico - Consulta por CEP
 
 ### Programa Santander Coders 2022
 ___
 Trilha - Automação de Testes
 
-Módulo VI: Front End Dinâmico
+Módulo VI: Front End Dinâmico (JS Vanilla)
 ___
 ### Atividade avaliativa do módulo
+
+O trabalho final do módulo é baseado no projeto desenvolvido durante as aulas, disponível no repositório https://github.com/leonardosouza/javascript-dinamico/tree/main/aula-06-07
 
 **Instruções:**
 
