@@ -1,7 +1,15 @@
 console.log("=== CEP ===");
 
+if(!localStorage.getItem("enderecos")) {
+    localStorage.setItem("enderecos", JSON.stringify([]));
+}
+
+let listaDeEnderecos = JSON.parse(localStorage.getItem("enderecos")) || [];
+
 // Actions
 
+onload = getLocalStorage();
+/*
 function onlyNumbers() {
     this.value = this.value.replace(/\D+/g, "");
 }
@@ -15,7 +23,7 @@ function validateEntry() {
         this.classList.add("error");
         this.focus();
     }
-}
+}*/
 
 function getAddress(postalCode) {
     console.log("get address", arguments[0], postalCode);
@@ -31,34 +39,47 @@ function getAddress(postalCode) {
 
     // request
     fetch(endpoint, config)
-        .then(function(resp) { return resp.json(); })
+        .then(resp => resp).then(resp=>resp.json())
         .then(getAddressSuccess)
         .catch(getAddressError);
 }
 
 function getAddressSuccess(address) {
-    if(address.erro == true) {
-        getAddressError();
-    } else {
-        const { logradouro, cep, localidade, uf, bairro } = address;
+    saveLocalStorage(address);
+}
 
-    const card = `<div class="card" style="width: 18rem;">
+function saveLocalStorage(address) {
+    listaDeEnderecos.push(address);
+    localStorage.setItem("enderecos", JSON.stringify(listaDeEnderecos));
+}
+
+function getLocalStorage() {
+    if(localStorage.getItem("enderecos")) {
+        const card = document.querySelector(".cards");
+        card.innerHTML = JSON.parse(localStorage.getItem("enderecos")).map(function(item) {
+            return `<div class="card" style="width: 18rem;">
                         <div class="card-body">
-                        <h5 class="card-title">${logradouro}</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">${bairro} - ${localidade} - ${uf}</h6>
-                        <p class="card-text">${cep}</p>
+                        <h5 class="card-title">${item.logradouro}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">${item.bairro} - ${item.localidade} - ${item.uf}</h6>
+                        <p class="card-text">${item.cep}</p>
                     </div>
                 </div>`
-
-    document.querySelector(".cards").innerHTML = card;
+        }).join('');
+    } else {
+        card.innerHTML = `<p>Consultas não foram salvas.</p>`
     }
 }
 
-function getAddressError() {
-    alert("CEP inválido! Favor, digite um novo CEP!")
-    console.log("deu ruim!");
+function getAddressError(e) {
+    //alert("CEP inválido! Favor, digite um novo CEP!")
+    console.log("deu ruim!", e);
 }
 
 // Mapping Events
-document.querySelector("#cep").addEventListener("input", onlyNumbers);
-document.querySelector("#cep").addEventListener("focusout", validateEntry);
+//document.querySelector("#cep").addEventListener("input", onlyNumbers);
+//document.querySelector("#cep").addEventListener("focusout", validateEntry);
+document.querySelector(".btn").addEventListener("click", (evento)=>{
+    event.preventDefault()
+    getAddress(document.querySelector("#cep").value);
+    getLocalStorage();
+});
